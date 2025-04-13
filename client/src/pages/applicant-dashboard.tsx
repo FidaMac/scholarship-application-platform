@@ -69,7 +69,7 @@ export default function ApplicantDashboard() {
                               {scholarships?.find(s => s.id === application.scholarshipId)?.name}
                             </p>
                             <p className="text-sm text-gray-500">
-                              Updated: {new Date(application.updatedAt).toLocaleDateString()}
+                              Updated: {application.updatedAt ? new Date(application.updatedAt).toLocaleDateString() : 'N/A'}
                             </p>
                           </div>
                           <StatusBadge status={application.status} />
@@ -85,6 +85,12 @@ export default function ApplicantDashboard() {
                     <Button onClick={() => setShowApplicationForm(true)}>
                       New Application
                     </Button>
+                    {/* Display help text to make it clear what happens */}
+                    {showApplicationForm && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        Please scroll down to see the application form
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -112,7 +118,7 @@ export default function ApplicantDashboard() {
                             <div>
                               <p className="font-medium">{document.name}</p>
                               <p className="text-xs text-gray-500">
-                                Uploaded {new Date(document.uploadedAt).toLocaleDateString()}
+                                Uploaded {document.uploadedAt ? new Date(document.uploadedAt).toLocaleDateString() : 'N/A'}
                               </p>
                             </div>
                           </div>
@@ -146,7 +152,10 @@ export default function ApplicantDashboard() {
             
             {/* Application Form */}
             {showApplicationForm && (
-              <div className="mt-6">
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <h2 className="text-2xl font-bold mb-4 scroll-mt-16" id="application-form">
+                  New Application Form
+                </h2>
                 <ApplicationForm 
                   scholarships={scholarships || []} 
                   onSubmitSuccess={() => setShowApplicationForm(false)} 
