@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -33,12 +34,6 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
 
-  // Redirect if user is already logged in
-  if (user) {
-    navigate(user.role === "admin" ? "/admin" : "/");
-    return null;
-  }
-
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -57,6 +52,13 @@ export default function AuthPage() {
       confirmPassword: "",
     },
   });
+  
+  // Redirect if user is already logged in - must come after all hook calls
+  useEffect(() => {
+    if (user) {
+      navigate(user.role === "admin" ? "/admin" : "/");
+    }
+  }, [user, navigate]);
 
   function onLoginSubmit(values: LoginValues) {
     loginMutation.mutate(values);
