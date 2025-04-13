@@ -1,0 +1,103 @@
+Here’s a **Product Requirements Document (PRD)** formatted specifically for an AI coding assistant, agnostic of the backend tech stack but with front-end styled using **ShadCN UI**. It provides clear, modular specifications for building the scholarship management system.
+
+---
+
+## 📄 Product Requirements Document (PRD)  
+### 🎯 Project: Scholarship Application & Management Platform  
+
+---
+
+### 1. **Overview**
+
+We are building a lightweight and efficient scholarship management system for an organization that processes scholarship applications. The platform will consist of:
+- An **internal admin database** for managing applicants and generating reports
+- A **public-facing web portal** for applicants to submit and manage their scholarship applications via a branded subdomain
+
+The goal is to build a **low-maintenance, hand-off-ready system** using no-code/low-code tools where possible, with a minimal but elegant interface using **ShadCN UI** for styling.
+
+---
+
+### 2. **Core Components**
+
+#### A. **Database Environment (Admin Panel)**
+
+- Store applicant information:
+  - Full name, email, phone
+  - Academic details (GPA, school, major)
+  - Financial background
+  - Scholarship applied for
+  - Application status
+  - Submitted documents
+  - Reviewer notes
+- Must allow:
+  - Searching/filtering applicants
+  - Adding reviewer notes or flags
+  - Status updates (e.g. “under review,” “approved,” “rejected”)
+  - Exporting filtered data (CSV/Excel)
+- **Preferable Tool:** Airtable (or equivalent—lightweight, queryable, user-friendly)
+
+---
+
+#### B. **Public-Facing Applicant Portal**
+
+- Hosted on subdomain: `scholarships.domain.com`
+- Applicants must be able to:
+  - Create and manage a profile (email-based login)
+  - Submit scholarship application form
+  - Upload necessary documents
+  - Check status of their application
+  - Edit personal/contact information
+- UI should be styled using **ShadCN UI** components:
+  - Card-based layout for dashboard
+  - Clear status tags (e.g. badge: “Pending Review”)
+  - Clean form UI with validation
+- **Preferable Tool:** Softr.io, or a custom frontend (React + ShadCN UI) tied to Airtable or similar backend
+
+---
+
+### 3. **Functional Requirements**
+
+#### Admin Side:
+- CRUD capabilities for applicant data
+- Admin/reviewer login (basic auth or tool-based)
+- Ability to tag/filter applicants based on criteria
+- Export functionality for basic reporting
+
+#### Applicant Side:
+- Signup/Login (email-based)
+- Application submission form with:
+  - Personal info
+  - Educational background
+  - File uploads (PDF/doc)
+- Dashboard showing:
+  - Current status
+  - Editable contact info
+  - View submitted data
+
+---
+
+### 4. **Non-Functional Requirements**
+- Responsive and accessible UI
+- Data privacy compliant (basic GDPR handling)
+- System should be easily hand-off ready to non-technical users
+- No need for deep customization beyond core workflows
+- Rapid prototyping acceptable if stability is ensured
+
+---
+
+### 5. **Stack Considerations**
+**Frontend:** React + ShadCN UI  
+**Backend:** Airtable (or lightweight DB with API access)  
+**Auth:** Email-based (via Airtable/Softr or Firebase/Supabase)  
+**Deployment:** Can be done on Vercel, Netlify, or through Softr.io hosting
+
+---
+
+### 6. **Out of Scope**
+- No deep analytics dashboards
+- No payment or financial integrations
+- No multilingual support in phase one
+
+---
+
+Let me know if you’d like a Notion or markdown version to share with your team, or want help generating boilerplate code to get started.
