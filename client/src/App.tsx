@@ -8,12 +8,14 @@ import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
 import ApplicantDashboard from "@/pages/applicant-dashboard";
 import AdminDashboard from "@/pages/admin-dashboard";
+import ResourcesPage from "@/pages/resources-page";
 
 function Router() {
   return (
     <Switch>
       <ProtectedRoute path="/" component={ApplicantDashboard} />
       <ProtectedRoute path="/admin" component={AdminDashboard} adminOnly={true} />
+      <ProtectedRoute path="/resources" component={ResourcesPage} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
