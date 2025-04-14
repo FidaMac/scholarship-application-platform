@@ -34,6 +34,16 @@ type RegisterValues = z.infer<typeof registerSchema>;
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
+  const { toast } = useToast();
+  const [isNetlifyDeployment, setIsNetlifyDeployment] = useState(false);
+
+  // Check if this is a Netlify deployment
+  useEffect(() => {
+    // This will be true if we're on Netlify (not localhost)
+    const isNetlify = window.location.hostname.includes('.netlify.app') || 
+                      !window.location.hostname.includes('localhost');
+    setIsNetlifyDeployment(isNetlify);
+  }, []);
 
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -61,13 +71,58 @@ export default function AuthPage() {
     }
   }, [user, navigate]);
 
+  // Function to handle demo login
+  function handleDemoLogin(userType: "applicant" | "admin") {
+    if (isNetlifyDeployment) {
+      // In demo mode, we just simulate a login without actually hitting the backend
+      localStorage.setItem('demoUser', JSON.stringify({
+        id: 1,
+        email: userType === "admin" ? "admin@example.com" : "user@example.com",
+        firstName: userType === "admin" ? "Admin" : "Demo",
+        lastName: "User",
+        role: userType,
+        createdAt: new Date().toISOString()
+      }));
+      
+      // Redirect to the appropriate dashboard
+      navigate(userType === "admin" ? "/admin" : "/");
+      
+      toast({
+        title: "Demo Mode Active",
+        description: `You're now in demo mode as ${userType === "admin" ? "an administrator" : "an applicant"}.`,
+        variant: "default",
+      });
+    } else {
+      // For local development, use the regular login flow
+      loginForm.setValue("email", userType === "admin" ? "admin@example.com" : "user@example.com");
+      loginForm.setValue("password", userType === "admin" ? "admin123" : "password123");
+      loginForm.handleSubmit(onLoginSubmit)();
+    }
+  }
+
   function onLoginSubmit(values: LoginValues) {
-    loginMutation.mutate(values);
+    if (isNetlifyDeployment) {
+      toast({
+        title: "Backend Not Available",
+        description: "This is a static demo. Please use the demo buttons below to explore the application.",
+        variant: "destructive",
+      });
+    } else {
+      loginMutation.mutate(values);
+    }
   }
 
   function onRegisterSubmit(values: RegisterValues) {
-    const { confirmPassword, ...userData } = values;
-    registerMutation.mutate(userData);
+    if (isNetlifyDeployment) {
+      toast({
+        title: "Backend Not Available",
+        description: "This is a static demo. Please use the demo buttons below to explore the application.",
+        variant: "destructive",
+      });
+    } else {
+      const { confirmPassword, ...userData } = values;
+      registerMutation.mutate(userData);
+    }
   }
 
   return (
@@ -174,6 +229,32 @@ export default function AuthPage() {
                         "Sign In"
                       )}
                     </Button>
+                    
+                    {isNetlifyDeployment && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <p className="text-sm text-gray-500 mb-3 text-center">
+                          Try the demo version without a backend:
+                        </p>
+                        <div className="flex gap-2">
+                          <Button 
+                            type="button" 
+                            className="flex-1" 
+                            variant="outline"
+                            onClick={() => handleDemoLogin("applicant")}
+                          >
+                            Try as Applicant
+                          </Button>
+                          <Button 
+                            type="button" 
+                            className="flex-1" 
+                            variant="outline"
+                            onClick={() => handleDemoLogin("admin")}
+                          >
+                            Try as Admin
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </form>
                 </Form>
               </TabsContent>
