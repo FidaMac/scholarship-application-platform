@@ -4,8 +4,8 @@
 [build]
   # Set the directory to your build command (this may need adjustment based on your setup)
   command = "npm run build"
-  # The directory to publish (this will be the client build output)
-  publish = "client/dist"
+  # The directory to publish (based on vite.config.ts build.outDir setting)
+  publish = "dist/public"
 
 # The following redirect rule is essential for Single Page Applications (SPAs)
 # It ensures that all routes are redirected to the index.html file
