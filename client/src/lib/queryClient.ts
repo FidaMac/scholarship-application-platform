@@ -1,5 +1,20 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
+// Determine if we're running in a production environment
+const isProduction = import.meta.env.PROD;
+
+// Function to get the base API URL depending on environment
+// In production (Netlify), API requests are redirected via Netlify functions
+function getApiBaseUrl() {
+  if (isProduction) {
+    // On Netlify, we use the same origin but rely on the redirects in netlify.toml
+    return '';
+  } else {
+    // In development, use the local server
+    return '';
+  }
+}
+
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     const text = (await res.text()) || res.statusText;
@@ -12,7 +27,9 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const res = await fetch(url, {
+  const apiUrl = `${getApiBaseUrl()}${url}`;
+  
+  const res = await fetch(apiUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -29,7 +46,9 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    const apiUrl = `${getApiBaseUrl()}${queryKey[0]}`;
+    
+    const res = await fetch(apiUrl, {
       credentials: "include",
     });
 
