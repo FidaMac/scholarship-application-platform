@@ -1,0 +1,5 @@
+# Netlify redirects file
+# Ensure this file is copied to the publish directory during build
+
+# SPA fallback
+/*    /index.html   200

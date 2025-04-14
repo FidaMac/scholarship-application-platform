@@ -1,0 +1,16 @@
+# netlify.toml
+# Configuration file for Netlify deployment
+
+[build]
+  # Set the directory to your build command (this may need adjustment based on your setup)
+  command = "npm run build"
+  # The directory to publish (this will be the client build output)
+  publish = "client/dist"
+
+# The following redirect rule is essential for Single Page Applications (SPAs)
+# It ensures that all routes are redirected to the index.html file
+# This allows the client-side router to handle all routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
